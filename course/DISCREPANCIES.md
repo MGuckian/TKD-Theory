@@ -26,4 +26,8 @@ Short notes only. "Enc" = Condensed Encyclopaedia (1999), printed pages. "Club" 
 | Existing app hooks | Several flashcard hooks use English sound-alikes (t02 "genuine", t04 "true chi", t07 "bull", cm01). The course replaces them with root-based hooks; the flashcard app is unchanged. | — |
 
 ## Design choices to review (not source issues)
-- Module gate: 85% mastery + all explain tasks + checkpoint of 85% or more. For course mastery, a card counts fully once it has been answered correctly on 2 separate days (half after 1 correct answer). The app's box-5 scale would need 27+ days per card. Change the thresholds in `course/course.js`.
+- Rhythm: six 12-minute micro-lessons a week plus a few minutes of daily review (replaces two 45-minute lessons; same weekly time). Lessons are in `course/module-1-lessons.js`.
+- Module gate: 85% mastery, all "Explain it" tasks, and a checkpoint of 85% or more. A card counts fully once answered correctly on 2 separate days (half after 1). Thresholds are in `course/course.js`.
+- Missed questions repeat at the end of the same set, then return the next day.
+- Spaced rechecks at 7 and 28 days after a module's last lesson.
+- Recordings of spoken answers stay in the browser for that session only; nothing is uploaded or saved.

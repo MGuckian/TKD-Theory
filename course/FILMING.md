@@ -1,44 +1,17 @@
 # Filming plan: Module 1
 
-Each lesson has an optional `video` slot in `course/module-1.js`. Upload as **unlisted** on YouTube and paste only the video ID (the part after `v=`), e.g. `video:"dQw4w9WgXcQ"`. It shows on the lesson's first screen.
+Each micro-lesson has an optional `video` slot in `course/module-1-lessons.js`. Upload as **unlisted** on YouTube and paste only the video ID (the part after `v=`), e.g. `video:"dQw4w9WgXcQ"`. It shows under the lesson's first reading screen.
 
-Keep every clip to 60–120 seconds, filmed in landscape. Use a quiet dojang, with the speaker in dobok. Scripts are outlines to say in your own words; don't read them word for word.
+Keep clips to 60–90 seconds (one idea each), filmed in landscape, with the speaker in dobok. Scripts are outlines to say in your own words.
 
-## 1.1 What Taekwon-Do is (90 s)
-**Script**
-1. "Tae, Kwon, Do." Say each part with a matching action (p.15).
-2. The point: technique without mental training is dangerous, which is why it's an art (p.15).
-3. Walk round the five-part cycle and return to fundamentals (p.725).
+| Lesson | Clip | Shots |
+|---|---|---|
+| 1.1 The name | Tae, Kwon, Do: one action for each (p.15) | Front kick, punch, bow, 2–3 s each, then to camera |
+| 1.2 Moving opponent | Using the attacker's momentum (p.16) | Partner steps in; slight push upsets their balance (slow, then full speed) |
+| 1.3 Cycle | Walk round the five elements (p.725) | Fundamental movement → pattern → sparring → conditioning on a pad → self-defence → back to fundamentals |
+| 1.4 Courtesy | Courtesy in the dojang (p.12) | Class bowing in; two students at a doorway giving way; senior and junior lines |
+| 1.6 Self-control | Control in free sparring (p.14) | Head kick stopped short; a student calmly resetting after being caught |
+| 2.4 Jung-Joong-Dong | Active reflection (p.32) | Class kneeling for 20 s of silent reflection at the end of training |
+| 2.6 Guidelines | Teach by action, not words (p.48) | Instructor demonstrates without speaking; class copies |
 
-**Shots**
-- Medium shot, to camera.
-- Front kick (Tae), then punch (Kwon), then a bow (Do), each 2–3 s.
-- Quick cuts: fundamental movement, pattern, sparring, conditioning on a pad, self-defence release, then back to the fundamental.
-
-## 1.2 The five tenets (2 min)
-**Script:** one line per tenet with the book's example. Courtesy: senior and junior. Integrity: never rig a break. Perseverance: Robert the Bruce. Self-control: in free sparring. Indomitable spirit: Thermopylae (p.12–14).
-
-**Shots**
-- Class bowing in and out (courtesy).
-- A student stopping a technique short in free sparring (self-control).
-- A student repeating a failed break after resetting (perseverance).
-- Close-up on the tenets poster, if the dojang has one.
-
-## 1.3 Moral culture (90 s)
-**Script:** the five virtues, then one image each: ripe grain bowing (humility); muddy pond settling (peace of mind); the north star (p.27–32).
-
-**Shots**
-- Instructor kneeling for a short reflection at the end of class: Jung-Joong-Dong as active reflection, not withdrawal (p.32).
-- A senior helping a white belt tie their belt.
-
-## 1.4 Philosophy (90 s)
-**Script:** the utmost purpose (p.47), then three guidelines acted out. Finish what you begin: a student completing a pattern after a mistake. Teach by action: an instructor demonstrating, not lecturing. Gentle to the weak: a senior pairing gently with a junior.
-
-**Shots:** the three short scenes above, 8–10 s each.
-
-## 1.5 and 1.6 Origins and history
-No filming needed. The timeline diagrams and narration cover these.
-**Optional:** a 60 s talking head on why the founder developed a Korean art, citing p.23–24 only.
-
-## Diagrams to check
-The cycle diagram on Lesson 1.1 follows the p.725 illustration's order. See DISCREPANCIES.md.
+No filming is needed for 2.1–2.3, 2.5 or Week 3: the diagrams, "picture it" prompts and narration cover them. The cycle diagram follows the p.725 illustration's order (see DISCREPANCIES.md).

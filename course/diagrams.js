@@ -14,28 +14,48 @@ var DIAGRAMS = (function(){
       var y = top + i*rowH;
       out += '<g class="dg-step" style="animation-delay:'+(i*0.2)+'s">'+
         '<circle cx="96" cy="'+y+'" r="6" fill="'+C.accent+'"/>'+
-        '<text x="86" y="'+(y+4)+'" text-anchor="end" font-size="11" font-weight="700" fill="'+C.accent+'">'+esc(it[0])+'</text>'+
-        '<text x="108" y="'+(y+4)+'" font-size="12" fill="'+C.text+'">'+esc(it[1])+'</text>'+
-        (it[2] ? '<text x="108" y="'+(y+19)+'" font-size="10.5" fill="'+C.faint+'">'+esc(it[2])+'</text>' : '')+
+        '<text x="86" y="'+(y+4)+'" text-anchor="end" font-size="12.5" font-weight="700" fill="'+C.accent+'">'+esc(it[0])+'</text>'+
+        '<text x="108" y="'+(y+4)+'" font-size="13.5" fill="'+C.text+'">'+esc(it[1])+'</text>'+
+        (it[2] ? '<text x="108" y="'+(y+19)+'" font-size="12.5" fill="'+C.faint+'">'+esc(it[2])+'</text>' : '')+
       '</g>';
     });
     return out + '</svg>';
   }
 
+  // Numbered rows of English term and Korean term.
+  function pairs(rows, caption, narration){
+    var svg = '<svg viewBox="0 0 340 '+(rows.length*44+6)+'" class="dg" role="img" aria-label="'+esc(caption)+'">';
+    rows.forEach(function(r, i){
+      var y = 4 + i*44;
+      svg += '<g class="dg-step" style="animation-delay:'+(i*0.2)+'s">'+
+        '<rect x="2" y="'+y+'" width="336" height="38" rx="9" fill="'+C.box+'" stroke="'+C.line+'"/>'+
+        '<text x="22" y="'+(y+24)+'" font-size="13" font-weight="700" fill="'+C.faint+'">'+(i+1)+'</text>'+
+        '<text x="44" y="'+(y+24)+'" font-size="15" fill="'+C.text+'">'+esc(r[0])+'</text>'+
+        '<text x="324" y="'+(y+24)+'" text-anchor="end" font-size="15" font-weight="700" fill="'+C.accent+'">'+esc(r[1])+'</text>'+
+      '</g>';
+    });
+    return {svg: svg+'</svg>', caption:caption, narration:narration};
+  }
+
   var defs = {
+    tenets: function(){ return pairs([["Courtesy","Ye Ui"],["Integrity","Yom Chi"],["Perseverance","In Nae"],["Self-Control","Guk Gi"],["Indomitable Spirit","Baekjul Boolgul"]],
+      "The five tenets, in order (p.12)", "Courtesy, Ye Ui. Integrity, Yom Chi. Perseverance, In Nae. Self-control, Guk Gi. Indomitable spirit, Baekjul Boolgul."); },
+    virtues: function(){ return pairs([["Humanity","In"],["Righteousness","Ui"],["Propriety","Ye"],["Wisdom","Ji"],["Trust","Shin"]],
+      "The five virtues (p.27–29)", "Humanity, In. Righteousness, Ui. Propriety, Ye. Wisdom, Ji. Trust, Shin."); },
+
     name: function(){
       var parts = [["Tae","foot","jump, fly, kick"],["Kwon","fist","punch, strike"],["Do","art, way","the right path"]];
-      var svg = '<svg viewBox="0 0 340 150" class="dg" role="img" aria-label="Tae Kwon Do">';
+      var svg = '<svg viewBox="0 0 340 152" class="dg" role="img" aria-label="Tae Kwon Do">';
       parts.forEach(function(p, i){
         var x = 12 + i*110;
         svg += '<g class="dg-step" style="animation-delay:'+(i*0.5)+'s">'+
           '<rect x="'+x+'" y="14" width="96" height="76" rx="12" fill="'+C.box+'" stroke="'+C.line+'"/>'+
           '<text x="'+(x+48)+'" y="52" text-anchor="middle" font-size="24" font-weight="700" fill="'+C.accent+'" font-family="Oswald,sans-serif">'+p[0]+'</text>'+
-          '<text x="'+(x+48)+'" y="74" text-anchor="middle" font-size="12" fill="'+C.text+'">'+p[1]+'</text>'+
-          '<text x="'+(x+48)+'" y="108" text-anchor="middle" font-size="10.5" fill="'+C.faint+'">'+p[2]+'</text>'+
+          '<text x="'+(x+48)+'" y="74" text-anchor="middle" font-size="13.5" fill="'+C.text+'">'+p[1]+'</text>'+
+          '<text x="'+(x+48)+'" y="110" text-anchor="middle" font-size="14" fill="'+C.faint+'">'+p[2]+'</text>'+
         '</g>';
       });
-      svg += '<text class="dg-step" style="animation-delay:1.6s" x="170" y="138" text-anchor="middle" font-size="12" fill="'+C.text+'">= mental training + unarmed combat technique</text>';
+      svg += '<text class="dg-step" style="animation-delay:1.6s" x="170" y="142" text-anchor="middle" font-size="15" fill="'+C.text+'">= mental training + unarmed combat technique</text>';
       return {svg: svg+'</svg>', caption:"The three parts of the name (p.15)",
         narration:"Tae means to jump or fly, to kick with the foot. Kwon is the fist, to punch. Do is an art or way. Together: mental training plus the techniques of unarmed combat."};
     },
@@ -48,7 +68,7 @@ var DIAGRAMS = (function(){
       svg += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+C.line+'" stroke-width="2" stroke-dasharray="4 5"/>';
       svg += '<circle class="dg-orbit" cx="'+cx+'" cy="'+(cy-r)+'" r="5" fill="'+C.accent+'" style="transform-origin:'+cx+'px '+cy+'px"/>';
       svg += '<text x="'+cx+'" y="'+(cy-2)+'" text-anchor="middle" font-size="15" font-weight="700" fill="'+C.accent+'" font-family="Oswald,sans-serif">Soonhwan Do</text>';
-      svg += '<text x="'+cx+'" y="'+(cy+15)+'" text-anchor="middle" font-size="10.5" fill="'+C.faint+'">no beginning, no end</text>';
+      svg += '<text x="'+cx+'" y="'+(cy+15)+'" text-anchor="middle" font-size="12.5" fill="'+C.faint+'">no beginning, no end</text>';
       labels.forEach(function(l, i){
         var a = -Math.PI/2 + i*2*Math.PI/labels.length;
         var x = cx + Math.cos(a)*r, y = cy + Math.sin(a)*r;
@@ -56,8 +76,8 @@ var DIAGRAMS = (function(){
         var anchor = Math.abs(Math.cos(a)) < 0.2 ? "middle" : (Math.cos(a) > 0 ? "start" : "end");
         svg += '<g class="dg-step" style="animation-delay:'+(i*0.25)+'s">'+
           '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="8" fill="'+C.box+'" stroke="'+C.accent+'" stroke-width="2"/>'+
-          '<text x="'+(x).toFixed(1)+'" y="'+(y+4).toFixed(1)+'" text-anchor="middle" font-size="9.5" font-weight="700" fill="'+C.accent+'">'+(i+1)+'</text>'+
-          '<text x="'+tx.toFixed(1)+'" y="'+ty.toFixed(1)+'" text-anchor="'+anchor+'" font-size="11.5" fill="'+C.text+'">'+l+'</text>'+
+          '<text x="'+(x).toFixed(1)+'" y="'+(y+4).toFixed(1)+'" text-anchor="middle" font-size="10" font-weight="700" fill="'+C.accent+'">'+(i+1)+'</text>'+
+          '<text x="'+tx.toFixed(1)+'" y="'+ty.toFixed(1)+'" text-anchor="'+anchor+'" font-size="13" fill="'+C.text+'">'+l+'</text>'+
         '</g>';
       });
       return {svg: svg+'</svg>', caption:"Cycle of Taekwon-Do, in the order of the illustration on p.725",
@@ -72,7 +92,7 @@ var DIAGRAMS = (function(){
         svg += '<g class="dg-step" style="animation-delay:'+(i*0.25)+'s">'+
           '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="38" rx="9" fill="'+(i===0?"rgba(155,255,31,0.14)":C.box)+'" stroke="'+(i===0?C.accent:C.line)+'"/>'+
           '<text x="170" y="'+(y+16)+'" text-anchor="middle" font-size="12.5" font-weight="700" fill="'+(i===0?C.accent:C.text)+'">'+rw[0]+'</text>'+
-          '<text x="170" y="'+(y+31)+'" text-anchor="middle" font-size="10.5" fill="'+C.faint+'">'+rw[1]+'</text>'+
+          '<text x="170" y="'+(y+31)+'" text-anchor="middle" font-size="12.5" fill="'+C.faint+'">'+rw[1]+'</text>'+
         '</g>';
       });
       return {svg: svg+'</svg>', caption:"Lao-Tzu's four kinds of society, best to worst (p.26)",

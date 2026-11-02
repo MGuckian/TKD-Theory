@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Printables</title>
+<style>
+  :root{--ink:#1B1D18;--faint:#55594F;--line:#C9C3B4;--accent:#2F6B05;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:#EEE9DE;color:var(--ink);font-family:Georgia,'Times New Roman',serif;font-size:13pt;line-height:1.45;}
+  .bar{position:sticky;top:0;background:#1B1D18;color:#fff;padding:12px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-family:Arial,sans-serif;z-index:2;}
+  .bar b{flex:1;min-width:160px;font-size:16px;}
+  .bar label{font-size:15px;display:flex;align-items:center;gap:6px;}
+  .bar input{width:20px;height:20px;}
+  .bar button{font-size:16px;padding:10px 18px;border-radius:8px;border:0;background:#9BFF1F;color:#0A1204;font-weight:700;cursor:pointer;}
+  .page{background:#fff;max-width:190mm;margin:16px auto;padding:14mm 14mm;box-shadow:0 1px 4px rgba(0,0,0,.15);}
+  h1{font-size:20pt;margin:0 0 4px;}
+  h2{font-size:15pt;margin:18px 0 6px;border-bottom:2px solid var(--ink);padding-bottom:3px;}
+  h3{font-size:13pt;margin:14px 0 4px;}
+  .note{color:var(--faint);font-size:11pt;margin:0 0 10px;}
+  ul{margin:4px 0 10px;padding-left:20px;} li{margin:3px 0;}
+  table{width:100%;border-collapse:collapse;margin:6px 0 12px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;font-size:12pt;}
+  th{background:#F2EEE5;font-size:11pt;}
+  td.blank{height:28px;}
+  .n{width:28px;color:var(--faint);}
+  .ref{color:var(--faint);font-size:10pt;}
+  .grid td{text-align:center;height:30px;}
+  .key{columns:2;column-gap:10mm;font-size:11pt;}
+  .key div{break-inside:avoid;margin-bottom:8px;}
+  .blk{break-inside:avoid;page-break-inside:avoid;}
+  h2{break-after:avoid;page-break-after:avoid;}
+  @media print{
+    body{background:#fff;font-size:12pt;}
+    .bar{display:none;}
+    .page{box-shadow:none;margin:0;max-width:none;padding:0;page-break-after:always;}
+    .page:last-child{page-break-after:auto;}
+    .page.off{display:none;}
+    @page{margin:14mm;}
+  }
+  .page.off{display:none;}
+</style>
+</head>
+<body>
+<div class="bar"><b>Module 1 printables</b><span id="toggles"></span><button onclick="window.print()">Print</button></div>
+<div id="out"></div>
+<script src="lib.js"></script>
+<script src="course.js"></script>
+<script src="module-1.js"></script>
+<script src="module-1-lessons.js"></script>
+<script>
+(function(){
+  function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+  var m = COURSE.content.m1, mod = COURSE.modules[0];
+  // Default walk round a dojang for the memory palace; the blank column is for your own spots.
+  var SPOTS = ["Front door","Shoe rack","Changing room","Notice board","Flags","Mirror","Instructor's spot","Front row","Kicking bags","Water bottles","Fire exit","Clock"];
+  var pages = [];
+
+  // 1. Summary sheet
+  var h = '<h1>Module '+mod.n+': '+esc(mod.title)+' · summary</h1><p class="note">Three key points from each lesson. Pin it up and read it aloud once a day. Page numbers are from the encyclopaedia (1999).</p>';
+  var wk = 0;
+  m.lessons.forEach(function(l){
+    if(l.week !== wk){ wk = l.week; h += '<h2>Week '+wk+'</h2>'; }
+    h += '<div class="blk"><h3>'+l.n+' '+esc(l.title)+'</h3><ul>'+l.summary.map(function(s){ return '<li>'+esc(s)+'</li>'; }).join("")+'</ul></div>';
+  });
+  pages.push({id:"summary", label:"Summary", html:h});
+
+  // 2. Recall sheets: blank, write from memory, check against the key page
+  h = '<h1>From memory</h1><p class="note">Write each list without looking. Date it. Check against the answer key, then redo any list you missed in a few days.</p>';
+  Object.keys(m.lists).forEach(function(id){
+    var L = m.lists[id];
+    h += '<div class="blk"><h3>'+esc(L.title)+' <span class="ref">'+esc(L.ref)+'</span> &nbsp;<span class="ref">Date: ________</span></h3><table>';
+    L.items.forEach(function(_, i){ h += '<tr><td class="n">'+(i+1)+'</td><td class="blank"></td></tr>'; });
+    h += '</table></div>';
+  });
+  pages.push({id:"recall", label:"Recall sheets", html:h});
+
+  // 3. Answer key
+  h = '<h1>Answer key</h1><div class="key">'+Object.keys(m.lists).map(function(id){
+    var L = m.lists[id]; return '<div><b>'+esc(L.title)+'</b> <span class="ref">'+esc(L.ref)+'</span><ol>'+L.items.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join("")+'</ol></div>';
+  }).join("")+'</div>';
+  pages.push({id:"key", label:"Answer key", html:h});
+
+  // 4. Memory palace for long lists
+  h = '<h1>Memory palace: your dojang</h1><p class="note">For long lists, picture walking into your dojang and leaving one item at each spot, in order, as a vivid scene. Replace the suggested spots with your own if you like, then walk the route in your head.</p>';
+  Object.keys(m.lists).forEach(function(id){
+    var L = m.lists[id]; if(!L.palace) return;
+    h += '<div class="blk"><h3>'+esc(L.title)+' <span class="ref">'+esc(L.ref)+'</span></h3><table><tr><th class="n">#</th><th>Spot</th><th>Your own spot</th><th>Item</th></tr>';
+    L.items.forEach(function(x, i){ h += '<tr><td class="n">'+(i+1)+'</td><td>'+esc(SPOTS[i])+'</td><td class="blank"></td><td>'+esc(x)+'</td></tr>'; });
+    h += '</table></div>';
+  });
+  pages.push({id:"palace", label:"Memory palace", html:h});
+
+  // 5. Korean terms
+  h = '<h1>Korean terms: Module '+mod.n+'</h1><p class="note">Say each term aloud, then cover the right-hand columns and test yourself. The root meanings are standard Sino-Korean readings, not from the encyclopaedia.</p>'+
+    '<table><tr><th>Term</th><th>Meaning</th><th>Root</th><th class="ref">Page</th></tr>'+
+    m.terms.map(function(t){ return '<tr><td><b>'+esc(t[0])+'</b></td><td>'+esc(t[1])+'</td><td>'+esc(t[2])+'</td><td class="ref">'+esc(t[3])+'</td></tr>'; }).join("")+'</table>';
+  pages.push({id:"terms", label:"Korean terms", html:h});
+
+  // 6. Tracker
+  h = '<h1>Weekly tracker</h1><p class="note">Tick each day: lesson (L), review (R). One dojang task per week.</p>';
+  for(var w=1; w<=mod.weeks; w++){
+    var task = (m.classTasks||[]).filter(function(t){ return t.week === w; })[0];
+    h += '<div class="blk"><h3>Week '+w+'</h3><table class="grid"><tr><th></th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>'+
+      '<tr><th>L</th>'+'<td></td>'.repeat(7)+'</tr><tr><th>R</th>'+'<td></td>'.repeat(7)+'</tr></table>'+
+      (task ? '<p>&#9744; <b>In the dojang:</b> '+esc(task.task)+'</p>' : '')+'</div>';
+  }
+  pages.push({id:"tracker", label:"Tracker", html:h});
+
+  document.getElementById("out").innerHTML = pages.map(function(p){ return '<section class="page" id="pg-'+p.id+'">'+p.html+'</section>'; }).join("");
+  document.getElementById("toggles").innerHTML = pages.map(function(p){
+    return '<label><input type="checkbox" checked data-pg="'+p.id+'"> '+esc(p.label)+'</label>';
+  }).join(" ");
+  document.querySelectorAll("[data-pg]").forEach(function(cb){
+    cb.onchange = function(){ document.getElementById("pg-"+cb.getAttribute("data-pg")).classList.toggle("off", !cb.checked); };
+  });
+})();
+</script>
+</body>
+</html>
