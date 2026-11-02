@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>4th Dan Theory Course</title>
+<meta name="theme-color" content="#0A0C0A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Base styles copied from the flashcard app so the course looks the same. -->
+<style>
+  :root{
+    --ink:#0A0C0A;
+    --ink-2:#14170F;
+    --ink-3:#1E2318;
+    --line: rgba(237,233,223,0.10);
+    --line-strong: rgba(237,233,223,0.18);
+    --dobok:#E7E3D6;
+    --dobok-dim: rgba(231,227,214,0.90);
+    --dobok-faint: rgba(231,227,214,0.70);
+    --accent:#9BFF1F;
+    --accent-soft: rgba(155,255,31,0.14);
+    --accent-line: rgba(155,255,31,0.5);
+    --red:#A6433A;
+    --red-soft: rgba(166,67,58,0.18);
+    --green:#5C7A4F;
+    --green-soft: rgba(92,122,79,0.18);
+    --radius: 16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;color:var(--dobok);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(520px circle at 12% -8%, rgba(155,255,31,0.16), transparent 60%),
+      radial-gradient(460px circle at 108% 18%, rgba(155,255,31,0.12), transparent 55%),
+      radial-gradient(640px circle at 50% 128%, rgba(155,255,31,0.09), transparent 60%),
+      var(--ink);
+    background-attachment:fixed;
+    min-height:100vh;
+  }
+  .bg-bolts{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.07;overflow:hidden;}
+  .voice{font-family:'Oswald',sans-serif;font-weight:600;}
+  .voice-caps{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:0.02em;font-style:italic;}
+  #root{max-width:480px;margin:0 auto;min-height:100vh;padding:20px 20px 40px;position:relative;z-index:1;}
+  h1,h2,h3{margin:0;font-weight:600;}
+  p{margin:0;}
+  button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none;color:inherit;}
+  input[type=text]{font-family:'Inter',sans-serif;}
+  .eyebrow{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dobok-faint);font-weight:600;}
+  .btn-primary{background:var(--accent);color:#0A1204;font-weight:700;font-size:15px;padding:15px 20px;border-radius:12px;width:100%;text-align:center;transition:transform .15s ease;}
+  .btn-primary:active{transform:scale(0.97);}
+  .btn-primary:disabled{opacity:0.4;}
+  .btn-ghost{background:transparent;border:1px solid var(--line-strong);color:var(--dobok);font-weight:600;font-size:14px;padding:13px 18px;border-radius:12px;width:100%;text-align:center;}
+  .btn-ghost:active{background:var(--ink-3);}
+  .chip{padding:9px 14px;border-radius:10px;font-size:13px;font-weight:600;border:1px solid var(--line-strong);color:var(--dobok-dim);}
+  .chip.active{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent);}
+  .card{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:20px;}
+  .opt{display:block;width:100%;text-align:left;padding:14px 16px;border-radius:12px;border:1px solid var(--line-strong);background:var(--ink-3);font-size:14.5px;margin-top:9px;}
+  .opt.correct{background:var(--green-soft);border-color:rgba(92,122,79,0.5);color:#D3E6C8;}
+  .opt.wrong{background:var(--red-soft);border-color:rgba(166,67,58,0.5);color:#F0BDB6;}
+  .opt.dim{opacity:0.45;}
+  .type-input{width:100%;padding:14px 16px;border-radius:12px;border:1px solid var(--line-strong);background:var(--ink-3);color:var(--dobok);font-size:15px;margin-top:14px;font-family:'Inter',sans-serif;resize:none;overflow:hidden;line-height:1.4;display:block;}
+  .type-input:focus{outline:none;border-color:var(--accent-line);}
+  .type-input.correct{background:var(--green-soft);border-color:rgba(92,122,79,0.6);color:#D3E6C8;}
+  .type-input.wrong{background:var(--red-soft);border-color:rgba(166,67,58,0.6);color:#F0BDB6;}
+  .result-label{font-size:13px;font-weight:700;margin-top:10px;letter-spacing:0.02em;}
+  .result-label.correct{color:#8FC97D;}
+  .result-label.wrong{color:#E29A92;}
+  .topic-toggle{width:36px;height:21px;border-radius:11px;background:var(--ink-3);border:1px solid var(--line-strong);position:relative;flex-shrink:0;padding:0;}
+  .topic-toggle .knob{position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:var(--dobok-faint);transition:left .15s ease,background .15s ease;}
+  .topic-toggle.on{background:var(--accent-soft);border-color:var(--accent-line);}
+  .topic-toggle.on .knob{left:17px;background:var(--accent);}
+  .topic-row.off{opacity:0.45;}
+  .err{font-size:12.5px;color:#F0BDB6;margin-top:6px;}
+  .fade-in{animation:fadeIn .35s ease both;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  ::selection{background:var(--accent-soft);}
+</style>
+<link rel="stylesheet" href="course.css">
+<script data-goatcounter="https://guckian.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<svg class="bg-bolts" viewBox="0 0 500 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M40,20 L90,20 L55,140 L100,140 L20,320 L55,180 L15,180 Z" fill="#9BFF1F"/>
+  <path d="M460,60 L500,60 L470,160 L510,160 L440,300 L465,190 L435,190 Z" fill="#9BFF1F" transform="rotate(12 470 180)"/>
+  <path d="M30,650 L75,650 L45,760 L85,760 L10,880 L40,740 L5,740 Z" fill="#9BFF1F" transform="rotate(-8 45 760)"/>
+  <path d="M420,700 L465,700 L435,800 L475,800 L400,900 L430,780 L395,780 Z" fill="#9BFF1F"/>
+</svg>
+<div id="root"></div>
+<script src="lib.js"></script>
+<script src="deck.js"></script>
+<script src="course.js"></script>
+<script src="module-1.js"></script>
+<script src="diagrams.js"></script>
+<script src="engine.js"></script>
+<script>Course.open();</script>
+</body>
+</html>

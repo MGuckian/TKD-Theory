@@ -1,7 +1,6 @@
-// Course shell. Runs inside index.html and reuses its globals: DATA, state, saveState,
-// checkTyped, buildOptions, todayISO, daysBetween, BOX_INTERVALS, TOPICS, render, view.
-// Course progress lives under its own key (COURSE.storageKey); flashcard progress for
-// existing cards stays in the app's own state so both views share the same Leitner boxes.
+// Course shell, served as its own page (course/index.html). Uses the course's own copies of
+// the deck and answer checking (deck.js, lib.js). All progress, including card boxes and the
+// streak, lives under COURSE.storageKey; nothing is shared with the flashcard app.
 var Course = (function(){
   var cs = null;            // course state
   var cv = {name:"home"};   // current course view
@@ -10,7 +9,7 @@ var Course = (function(){
   var REVIEW_SIZE = 15;
 
   // ---------- storage ----------
-  function defaultCS(){ return {v:1, startDate:null, lastReview:null, cards:{}, lessons:{}, tasks:{}, checkpoints:{}, viva:[]}; }
+  function defaultCS(){ return {v:1, startDate:null, lastReview:null, streak:0, lastDate:null, cards:{}, lessons:{}, tasks:{}, checkpoints:{}, viva:[]}; }
   function loadCS(cb){
     function parse(raw){
       var base = defaultCS();
@@ -65,32 +64,23 @@ var Course = (function(){
   }
   function pool(){ return Object.keys(CARD).map(function(k){ return CARD[k]; }); }
 
-  // ---------- card progress (shared Leitner boxes) ----------
-  function isDeckCard(id){ return state.cards.hasOwnProperty(id) || DATA.some(function(c){ return c.id===id; }); }
-  function getProg(id){
-    var p = isDeckCard(id) ? state.cards[id] : cs.cards[id];
-    return p || {box:0, due:todayISO()};
-  }
-  function setProg(id, p){
-    if(isDeckCard(id)) state.cards[id] = p; else cs.cards[id] = p;
-  }
+  // ---------- card progress (Leitner boxes, same intervals as the flashcard app) ----------
+  function getProg(id){ return cs.cards[id] || {box:0, due:todayISO()}; }
   function commit(card, correct){
     var p = getProg(card.id);
-    p = {box:p.box, due:p.due, _seenEver:true};
-    p.box = correct ? Math.min(p.box+1, BOX_INTERVALS.length-1) : 0;
-    if(correct) state.xp += 10; else state.xp += 2;
+    p = {box: correct ? Math.min(p.box+1, BOX_INTERVALS.length-1) : 0};
     var d = new Date(); d.setDate(d.getDate()+BOX_INTERVALS[p.box]);
     p.due = d.toISOString().slice(0,10);
-    setProg(card.id, p);
-    saveState(state); saveCS();
+    cs.cards[card.id] = p;
+    saveCS();
   }
   function bumpStreak(){
     var today = todayISO();
-    if(state.lastDate === today) return;
-    var wasYesterday = state.lastDate && daysBetween(state.lastDate, today) === 1;
-    state.streak = wasYesterday ? state.streak+1 : 1;
-    state.lastDate = today;
-    saveState(state);
+    if(cs.lastDate === today) return;
+    var wasYesterday = cs.lastDate && daysBetween(cs.lastDate, today) === 1;
+    cs.streak = wasYesterday ? cs.streak+1 : 1;
+    cs.lastDate = today;
+    saveCS();
   }
 
   // Course mastery of one card: 0, 0.5 after one correct answer, 1 once correct on two days.
@@ -206,7 +196,8 @@ var Course = (function(){
   function bar(pct){ return '<div class="c-bar"><div style="width:'+pct+'%"></div></div>'; }
   function refTag(ref){ return ref ? '<span class="c-ref">'+esc(ref)+'</span>' : ''; }
   function topNav(title, backTo){
-    return '<div class="c-top"><button class="c-link" data-go="'+(backTo||"home")+'">&larr; '+(backTo==="flash"?"Flashcards":"Back")+'</button><div class="eyebrow">'+esc(title)+'</div><div style="width:60px"></div></div>';
+    var back = backTo === "none" ? '<div style="width:60px"></div>' : '<button class="c-link" data-go="'+(backTo||"home")+'">&larr; Back</button>';
+    return '<div class="c-top">'+back+'<div class="eyebrow">'+esc(title)+'</div><div style="width:60px"></div></div>';
   }
   function speak(text){
     if(!("speechSynthesis" in window)) return;
@@ -230,8 +221,8 @@ var Course = (function(){
       });
     });
     return '<div class="fade-in">'+
-      topNav("4th Dan theory course","flash")+
-      '<div class="c-week">Week '+cw+' of '+total+' · '+esc(paceNote())+'</div>'+
+      topNav("4th Dan theory course","none")+
+      '<div class="c-week">Week '+cw+' of '+total+' · '+esc(paceNote())+(cs.streak > 0 && cs.lastDate && daysBetween(cs.lastDate, todayISO()) <= 1 ? ' · '+cs.streak+' day streak' : '')+'</div>'+
       '<div class="card c-next"><div class="eyebrow" style="color:var(--accent)">Next step</div>'+
         '<div class="voice c-next-title">'+esc(ns.label)+'</div>'+
         '<div class="c-sub">'+esc(ns.detail)+'</div>'+
@@ -595,7 +586,6 @@ var Course = (function(){
     root.querySelectorAll("[data-go]").forEach(function(el){
       el.onclick = function(){
         var g = el.getAttribute("data-go");
-        if(g === "flash"){ stopSpeech(); view = "home"; render(); return; }
         if(g === "review"){ startReview(); return; }
         quiz = null; show({name:g});
       };
@@ -706,6 +696,8 @@ var Course = (function(){
     if(vn) vn.onclick = function(){ cv.i++; cv.revealed = false; window.scrollTo(0,0); render(); };
   }
 
+  function render(){ document.getElementById("root").innerHTML = renderView(); attach(); }
+
   return {
     open: function(){
       loadCS(function(s){
@@ -713,10 +705,9 @@ var Course = (function(){
         if(!cs.startDate){ cs.startDate = todayISO(); saveCS(); }
         indexCards();
         cv = {name:"home"}; quiz = null;
-        view = "course"; render();
+        render();
       });
     },
-    render: function(root){ root.innerHTML = renderView(); attach(); },
     // Exposed for tests.
     _cards: function(){ indexCards(); return CARD; },
     _courseCard: function(id){ return courseCard(id); },

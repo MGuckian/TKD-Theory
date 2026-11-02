@@ -10,7 +10,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="course/course.css">
 <style>
   :root{
     --ink:#0A0C0A;
@@ -90,10 +89,6 @@
   <path d="M420,700 L465,700 L435,800 L475,800 L400,900 L430,780 L395,780 Z" fill="#9BFF1F"/>
 </svg>
 <div id="root"></div>
-<script src="course/course.js"></script>
-<script src="course/module-1.js"></script>
-<script src="course/diagrams.js"></script>
-<script src="course/engine.js"></script>
 <script>
 
 var GRADE_OPTIONS = [
@@ -923,7 +918,6 @@ function render(){
   if(view==="home"){ root.innerHTML = renderHome(); attachHomeHandlers(); return; }
   if(view==="session"){ root.innerHTML = renderSession(); attachSessionHandlers(); return; }
   if(view==="summary"){ root.innerHTML = renderSummary(); attachSummaryHandlers(); return; }
-  if(view==="course"){ Course.render(root); return; }
 }
 
 function progressBar(progressPct){
@@ -978,7 +972,6 @@ function renderHome(){
       '<div style="font-size:13px;color:var(--dobok-dim);">'+due+' questions available</div>'+
     '</div>'+
     '<button id="start-btn" class="btn-primary"'+(anyTopicEnabled()?"":" disabled")+' style="margin-top:22px;">'+(anyTopicEnabled() ? (due>0 ? "Start session" : "Study anyway") : "Select a section below")+'</button>'+
-    (typeof Course !== "undefined" ? '<button id="course-btn" class="btn-ghost" style="margin-top:10px;">4th Dan theory course &rarr;</button>' : '')+
     '<div style="margin-top:30px;">'+
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'+
         '<div class="eyebrow">Mastery by section</div>'+
@@ -1001,8 +994,6 @@ function attachHomeHandlers(){
     if(session.queue.length===0){ return; }
     view = "session"; render();
   };
-  var courseBtn = document.getElementById('course-btn');
-  if(courseBtn) courseBtn.onclick = function(){ Course.open(); };
   document.querySelectorAll('.topic-toggle[data-topic]').forEach(function(el){
     el.onclick = function(){
       var k = el.getAttribute('data-topic');
